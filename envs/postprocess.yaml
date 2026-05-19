@@ -1,0 +1,11 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - duphold=0.2.0
+  - bcftools
+  - samtools
+  - python>=3.9
+  - pandas
+  - numpy
+  - matplotlib

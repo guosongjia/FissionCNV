@@ -1,0 +1,41 @@
+# Snakemake state
+.snakemake/
+
+# Conda environments (managed by snakemake --conda-prefix conda_envs)
+conda_envs/
+
+# Pipeline outputs
+cleaned/
+mapped/
+temp/
+res/
+logs/
+benchmarks/
+
+# Loose run artifacts
+snakemake_run.log
+nohup.out
+*.log
+
+# Editor / OS junk
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.Rhistory
+.DS_Store
+.claude/
+
+# Legacy CNVPipe ignores (kept for safety)
+data/
+analysis/
+analysis2/
+refs/
+src/
+bin/
+tools/
+bundle/
+dust/
+resources/GATK/
+resources/SVM/
+resources/ML/
+resources/ML2/

@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - smoove=0.2.8
+  - htslib=1.15
+  - bcftools
+  - samtools

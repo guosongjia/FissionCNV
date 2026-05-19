@@ -1,0 +1,62 @@
+## Config file for FissionCNV snakemake workflow
+## Forked from CNVPipe; adapted for haploid fission yeast CNV analysis
+
+data:
+  samples: "samples.tsv"
+  genome: "/data/b/jgs/CNV_analysis/CNVpipe_test/genome/S_octosporus.fasta"
+  outdir: "."
+
+  # Annotation BED files (optional, for GS/MS scoring)
+  low-complexity: "/data/b/jgs/CNV_analysis/CNVpipe_test/low_m_c_region/S_octosporus.longdust.bed"
+  low-mappable: "/data/b/jgs/CNV_analysis/CNVpipe_test/low_m_c_region/S_octosporus.genmap.bed"
+
+settings:
+  keep-intermediate:
+    fastp: False
+    bwamem: False
+
+params:
+  # Whether the input is BAM or fastq?
+  bam-input: False
+
+  # Skip fastp if input reads are already cleaned
+  skip-fastp: False
+
+  # Fixed bin size for depth-based CNV calling (bp)
+  binSize: 200
+
+  # Ploidy (1 for haploid fission yeast)
+  ploidy: 1
+
+  # Merge parameters
+  merge:
+    min-reciprocal-overlap: 0.75
+    max-overlap: 0.95
+    length-ratio-limit: 0.5
+
+  # Hard filter parameters
+  filter:
+    min-tools: 2
+    min-duphold-score: 0
+    depth-only-min-length: 600
+
+  # Population frequency annotation threshold
+  population-freq-threshold: 0.8
+
+  # Thread settings
+  fastp:
+    threads: 6
+
+  bwamem:
+    threads: 26
+    index: False
+    platform: "ILLUMINA"
+
+  cnvkit:
+    threads: 10
+
+  cnvpytor:
+    threads: 10
+
+  mops:
+    threads: 10

@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - fastp
+  - bwa
+  - samtools
+  - multiqc

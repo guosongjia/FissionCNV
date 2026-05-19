@@ -1,0 +1,8 @@
+## Default snakemake profile for FissionCNV
+## Use: snakemake --profile profiles/default ...
+
+use-conda: true
+conda-frontend: conda
+conda-prefix: conda_envs
+latency-wait: 60
+jobs: 10
