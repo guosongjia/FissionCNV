@@ -4,7 +4,7 @@
 
 import sys
 sys.path.insert(0, snakemake.params['absPath'] + '/scripts')
-from utils import readCNVFile, calculateOverlapProp4Region
+from utils import readCNVFile, calculateOverlapProp4Region, mergeConsecutiveSegments
 
 
 def calculateOverlapScore(target_cnv, cnv_list, reciprocal_prop=0.3):
@@ -29,9 +29,9 @@ outputFile = snakemake.output[0]
 lowComplexFile = snakemake.params['low_complexity']
 lowMapFile = snakemake.params['low_mappable']
 
-# Load annotation BED files (if provided)
-bad_list = readCNVFile(lowComplexFile, tool='Bad') if lowComplexFile else []
-lowMap_list = readCNVFile(lowMapFile, tool='Bad') if lowMapFile else []
+# Load annotation BED files (if provided), merge adjacent bins into contiguous regions
+bad_list = mergeConsecutiveSegments(sorted(readCNVFile(lowComplexFile, tool='Bad'), key=lambda x: (x[0], x[1]))) if lowComplexFile else []
+lowMap_list = mergeConsecutiveSegments(sorted(readCNVFile(lowMapFile, tool='Bad'), key=lambda x: (x[0], x[1]))) if lowMapFile else []
 
 with open(inputFile, 'r') as f, open(outputFile, 'w') as g:
     header = f.readline().strip()

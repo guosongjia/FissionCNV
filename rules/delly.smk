@@ -77,7 +77,7 @@ rule delly_uncompress:
     input:
         rules.delly_filter.output,
     output:
-        "temp/delly/filter/{sample}.bcf",
+        "res/delly/{sample}.raw.bcf",
     conda:
         "../envs/delly.yaml"
     shell:

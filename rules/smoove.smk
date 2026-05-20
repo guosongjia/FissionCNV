@@ -7,9 +7,9 @@ rule smoove_call:
         "mapped/{sample}.bam.bai",
         bam = "mapped/{sample}.bam",
     output:
-        "temp/smoove/{sample}-smoove.vcf.gz",
+        "res/smoove/{sample}.raw.vcf.gz",
     params:
-        outdir = "temp/smoove/",
+        outdir = "res/smoove/",
         ref = config['data']['genome'],
     log:
         "logs/smoove/{sample}.call.log"
@@ -19,7 +19,8 @@ rule smoove_call:
         "../envs/smoove.yaml"
     shell:
         "(smoove call --outdir {params.outdir} "
-        "--name {wildcards.sample} --fasta {params.ref} -p 1 {input.bam}) > {log} 2>&1"
+        "--name {wildcards.sample} --fasta {params.ref} -p 1 {input.bam} && "
+        "mv {params.outdir}{wildcards.sample}-smoove.vcf.gz {output}) > {log} 2>&1"
 
 rule smoove_extract:
     input:

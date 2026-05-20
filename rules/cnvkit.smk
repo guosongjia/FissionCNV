@@ -47,7 +47,7 @@ rule cnvkit_call:
     input:
         rules.cnvkit_segmetric.output,
     output:
-        "temp/cnvkit/call/{sample}.cns",
+        "res/cnvkit/{sample}.raw.cns",
     params:
         "-m clonal --purity 1 --ploidy 1 --filter ci"
     log:

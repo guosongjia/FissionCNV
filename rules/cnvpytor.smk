@@ -10,7 +10,7 @@ rule cnvpytor_call:
         bam = "mapped/{sample}.bam",
     output:
         pytor = "temp/cnvpytor/{sample}.pytor",
-        call = "temp/cnvpytor/{sample}.call",
+        call = "res/cnvpytor/{sample}.raw.call",
     params:
         binSize = config['params']['binSize'],
         ref = config['data']['genome'],
@@ -31,7 +31,7 @@ rule cnvpytor_call:
 
 rule cnvpytor_convert:
     input:
-        "temp/cnvpytor/{sample}.call",
+        "res/cnvpytor/{sample}.raw.call",
     output:
         "res/cnvpytor/{sample}.bed",
     script:
