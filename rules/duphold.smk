@@ -7,7 +7,7 @@ rule convert_bed2vcf:
         bed = "res/merge/{sample}.merged.bed",
         fai = config['data']['genome'] + ".fai",
     output:
-        "temp/duphold/{sample}.vcf",
+        temp("temp/duphold/{sample}.vcf"),
     params:
         absPath = config['params']['absPath']
     shell:
@@ -19,7 +19,7 @@ rule duphold_score:
         bam = "mapped/{sample}.bam",
         vcf = rules.convert_bed2vcf.output,
     output:
-        "temp/duphold/{sample}.duphold.vcf",
+        temp("temp/duphold/{sample}.duphold.vcf"),
     params:
         genome = config['data']['genome'],
     threads: 8
@@ -36,7 +36,7 @@ rule duphold_extract:
     input:
         rules.duphold_score.output,
     output:
-        "temp/duphold/{sample}.duphold.bed",
+        temp("temp/duphold/{sample}.duphold.bed"),
     conda:
         "../envs/postprocess.yaml"
     shell:

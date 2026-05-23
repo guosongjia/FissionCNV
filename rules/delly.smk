@@ -8,7 +8,7 @@ rule delly_call_sv:
         "mapped/{sample}.bam.bai",
         bam = "mapped/{sample}.bam",
     output:
-        "temp/delly/call/{sample}.sv.bcf",
+        temp("temp/delly/call/{sample}.sv.bcf"),
     params:
         ref = config['data']['genome'],
     log:
@@ -24,7 +24,7 @@ rule delly_merge:
     input:
         expand("temp/delly/call/{sample}.sv.bcf", sample=config['global']['sample-names']),
     output:
-        "temp/delly/mergedSites.sv.bcf",
+        temp("temp/delly/mergedSites.sv.bcf"),
     log:
         "logs/delly/mergeSV.log"
     conda:
@@ -37,7 +37,7 @@ rule delly_genotype:
         bam = "mapped/{sample}.bam",
         merged = "temp/delly/mergedSites.sv.bcf",
     output:
-        "temp/delly/genotype/{sample}.geno.sv.bcf",
+        temp("temp/delly/genotype/{sample}.geno.sv.bcf"),
     params:
         ref = config['data']['genome'],
     log:
@@ -51,7 +51,7 @@ rule delly_genotype_merge:
     input:
         expand("temp/delly/genotype/{sample}.geno.sv.bcf", sample=config['global']['sample-names']),
     output:
-        "temp/delly/genotype.merged.bcf",
+        temp("temp/delly/genotype.merged.bcf"),
     threads: 10
     log:
         "logs/delly/genotype.merge.log"
@@ -65,7 +65,7 @@ rule delly_filter:
     input:
         "temp/delly/genotype.merged.bcf",
     output:
-        "temp/delly/germline.bcf"
+        temp("temp/delly/germline.bcf")
     log:
         "logs/delly/filter.log"
     conda:
@@ -87,7 +87,7 @@ rule delly_extract:
     input:
         rules.delly_uncompress.output,
     output:
-        "temp/delly/extract/{sample}.bed",
+        temp("temp/delly/extract/{sample}.bed"),
     conda:
         "../envs/delly.yaml"
     shell:

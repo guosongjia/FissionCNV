@@ -9,7 +9,7 @@ rule cnvpytor_call:
         "mapped/{sample}.bam.bai",
         bam = "mapped/{sample}.bam",
     output:
-        pytor = "temp/cnvpytor/{sample}.pytor",
+        pytor = temp("temp/cnvpytor/{sample}.pytor"),
         call = "res/cnvpytor/{sample}.raw.call",
     params:
         binSize = config['params']['binSize'],

@@ -1,8 +1,24 @@
 ## Default snakemake profile for FissionCNV
 ## Use: snakemake --profile profiles/default ...
+## Tuned for A6000du single-node (48 cores, 125 GB RAM).
 
 use-conda: true
 conda-frontend: conda
-conda-prefix: conda_envs
+conda-prefix: /data/b/jgs/CNV_analysis/FissionCNV/conda_envs
+
+# Concurrency: leave ~8 cores for OS / other users.
+# Snakemake packs jobs by their `threads:` value into this budget,
+# so e.g. 40 cores can run 40 single-thread smoove/delly in parallel,
+# or 5 duphold (8 threads each), or 4 cnvpytor (10 threads each).
+cores: 40
+jobs: 40
+local-cores: 4
+resources:
+  - mem_mb=110000
+
+# Robustness for long large-cohort runs
 latency-wait: 60
-jobs: 10
+keep-going: true
+rerun-incomplete: true
+restart-times: 1
+printshellcmds: true

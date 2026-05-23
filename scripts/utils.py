@@ -159,10 +159,13 @@ def resolveConflictCNVs(cnvList):
     return new_cnvList
 
 
+PRECISE_TOOLS = {'smoove', 'delly'}
+
+
 def mergeCNVFromTools(cnvList, min_threshold=0.75, max_threshold=0.95, length_ratio_limit=None):
     """ Merge CNV results from different tools
     >>> mergeCNVFromTools([['chr1',0,1000,0,'smoove'], ['chr1',100,1000,0,'delly'], ['chr2',0,1000,0,'cnvkit']])
-    [['chr1', 0, 1000, 0, 'smoove,delly', 2, 90.0], ['chr2', 0, 1000, 0, 'cnvkit', 1, 0.0]]
+    [['chr1', 0, 1000, 0, 'delly,smoove', 2, 90.0], ['chr2', 0, 1000, 0, 'cnvkit', 1, 0.0]]
     """
     cnvs2 = cnvList[:]
     mergedCnvs = []
@@ -182,7 +185,13 @@ def mergeCNVFromTools(cnvList, min_threshold=0.75, max_threshold=0.95, length_ra
                     len2 = cnv2[2] - cnv2[1]
                     if min(len1, len2) / max(len1, len2) < length_ratio_limit:
                         continue
-                cnv1[1:3] = [min(cnv1[1], cnv2[1]), max(cnv1[2], cnv2[2])]
+                # Only expand boundary if no precise tool (smoove/delly) has set it,
+                # or the new tool is also precise
+                current_tools = set(cnv1[-1].split(','))
+                has_precise = bool(PRECISE_TOOLS & current_tools)
+                new_is_precise = cnv2[-1] in PRECISE_TOOLS
+                if not has_precise or new_is_precise:
+                    cnv1[1:3] = [min(cnv1[1], cnv2[1]), max(cnv1[2], cnv2[2])]
                 cnv1[-1] = ','.join([cnv1[-1], cnv2[-1]])
                 cnvs2.pop(i - count)
                 accumLen += overlap

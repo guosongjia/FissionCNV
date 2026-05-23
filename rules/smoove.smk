@@ -26,7 +26,7 @@ rule smoove_extract:
     input:
         rules.smoove_call.output,
     output:
-        "temp/smoove/{sample}.bed",
+        temp("temp/smoove/{sample}.bed"),
     conda:
         "../envs/smoove.yaml"
     shell:
