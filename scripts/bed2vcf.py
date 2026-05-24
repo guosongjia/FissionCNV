@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     today = date.today().strftime("%Y%m%d")
     chrLength = readChrLength(inputFaiFile)
-    sample = os.path.basename(inputBedFile).split('.')[0]
+    sample = os.path.basename(inputBedFile).replace('.merged.bed', '').replace('.bed', '')
 
     print('##fileformat=VCF4.2', file=Out)
     print('##fileDate={:s}'.format(today), file=Out)
