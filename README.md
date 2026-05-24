@@ -2,6 +2,8 @@
 
 A Snakemake pipeline for CNV calling in haploid fission yeast (*Schizosaccharomyces*) populations. Adapted from [CNVPipe](https://github.com/sunjh22/CNVPipe).
 
+![pipeline overview](pipeline.png)
+
 ## Workflow
 
 1. **Preprocessing** (optional): fastp → BWA MEM → markdup

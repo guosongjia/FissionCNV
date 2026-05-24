@@ -1,0 +1,63 @@
+digraph FissionCNV {
+    rankdir=TB;
+    bgcolor="white";
+    splines=ortho;
+    nodesep=0.35;
+    ranksep=0.45;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, margin="0.18,0.10"];
+    edge [fontname="Helvetica", fontsize=9, color="#555555"];
+
+    // ---- Inputs ----
+    fq    [label="FASTQ\n(samples.tsv)", fillcolor="#eeeeee"];
+    bam0  [label="BAM\n(bam-input: True)", fillcolor="#eeeeee"];
+    ref   [label="reference FASTA", fillcolor="#eeeeee"];
+    anno  [label="annotation BEDs\nlow-complexity / low-mappability", fillcolor="#eeeeee"];
+
+    // ---- Preprocessing ----
+    prep  [label="Preprocessing\nfastp  →  BWA MEM  →  markdup  →  index", fillcolor="#d6ebff"];
+    bam   [label="aligned BAM\n(per sample)", fillcolor="#d6ebff"];
+
+    // ---- 5 callers ----
+    callers [label="CNV calling (5 tools, parallel)\nCNVKit · CNVpytor · cn.MOPS · Smoove · Delly", fillcolor="#fde8c4"];
+
+    // ---- Post-processing ----
+    merge   [label="Merge calls across tools\n(priority: smoove → delly → cnvkit → cnvpytor → mops)", fillcolor="#d6ebff"];
+    duphold [label="Score with duphold\n(DHFC / DHBFC / DHFFC)", fillcolor="#d6ebff"];
+    filter  [label="Hard filter\n(toolNum ≥ 2 · duphold > 0 · depth-only ≥ 600 bp)", fillcolor="#d6ebff"];
+    annot   [label="Annotate\n(GS, MS, population frequency)", fillcolor="#d6ebff"];
+
+    // ---- Outputs ----
+    final   [label="per-sample BED\nres/final/{sample}.bed", fillcolor="#d4f7d4"];
+    popmat  [label="population CN / binary matrix\nres/population/*.tsv", fillcolor="#d4f7d4"];
+    plot    [label="genome overview plot\nres/report/{sample}.overview.png", fillcolor="#d4f7d4"];
+
+    // ---- Edges ----
+    fq    -> prep;
+    prep  -> bam;
+    bam0  -> bam [style=dashed, xlabel="bam-input"];
+    ref   -> prep;
+    ref   -> callers;
+    bam   -> callers;
+    callers -> merge;
+    bam   -> duphold;
+    ref   -> duphold;
+    merge -> duphold -> filter -> annot -> final;
+    anno  -> annot;
+    final -> popmat;
+    final -> plot;
+
+    // ---- Legend ----
+    subgraph cluster_legend {
+        label="Legend";
+        fontname="Helvetica";
+        fontsize=10;
+        style="dashed";
+        color="#999999";
+        node [shape=box, style="rounded,filled", fontsize=9, margin="0.10,0.05"];
+        l_in    [label="input / reference", fillcolor="#eeeeee"];
+        l_step  [label="processing step",   fillcolor="#d6ebff"];
+        l_call  [label="CNV calling",       fillcolor="#fde8c4"];
+        l_out   [label="output",            fillcolor="#d4f7d4"];
+        l_in -> l_step -> l_call -> l_out [style=invis];
+    }
+}
