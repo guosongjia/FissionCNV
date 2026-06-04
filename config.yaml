@@ -10,6 +10,15 @@ data:
   low-complexity: "/data/b/jgs/CNV_analysis/CNVpipe_test/low_m_c_region/S_octosporus.longdust.bed"
   low-mappable: "/data/b/jgs/CNV_analysis/CNVpipe_test/low_m_c_region/S_octosporus.genmap.bed"
 
+  # Breakpoint annotation files (all optional, missing → skip that category)
+  breakpoint-annotations:
+    trna_gff: "/data/b/jgs/CNV_analysis/CNVpipe_test/repeatative_element/S_octosporus/S_octosporus.tRNA.gff3"
+    rrna_gff: "/data/b/jgs/CNV_analysis/CNVpipe_test/repeatative_element/S_octosporus/S_octosporus.rRNA.gff3"
+    ltr_bed: "/data/b/jgs/CNV_analysis/CNVpipe_test/repeatative_element/S_octosporus/S_octosporus.LTR.bed"
+    centromeric_bed: "/data/b/jgs/CNV_analysis/CNVpipe_test/repeatative_element/S_octosporus/S_octosporus.centromeric.bed"
+    subtelomeric_bed: ""
+    kmds_bed: "/data/b/jgs/CNV_analysis/CNVpipe_test/repeatative_element/S_octosporus/S_octosporus.KMD.bed"
+
 settings:
   keep-intermediate:
     fastp: False
@@ -39,6 +48,9 @@ params:
     min-tools: 2
     min-duphold-score: 0
     depth-only-min-length: 600
+
+  # Breakpoint analysis (microhomology + repeat element hits)
+  breakpoint-analysis: True
 
   # Population frequency annotation threshold
   population-freq-threshold: 0.8

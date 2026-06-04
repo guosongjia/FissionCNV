@@ -43,7 +43,7 @@ rule annotate:
     input:
         "res/filtered/{sample}.bed",
     output:
-        "res/final/{sample}.bed",
+        "res/annotated/{sample}.bed",
     params:
         absPath = config['params']['absPath'],
         low_complexity = config['data']['low-complexity'],
@@ -51,7 +51,17 @@ rule annotate:
     script:
         "../scripts/annotate.py"
 
-# Step 5: Population matrix (cross-sample)
+# Step 5 (no-breakpoint path): passthrough to res/final when breakpoint-analysis is disabled
+if not config['params'].get('breakpoint-analysis', False):
+    rule final_passthrough:
+        input:
+            "res/annotated/{sample}.bed",
+        output:
+            "res/final/{sample}.bed",
+        shell:
+            "cp {input} {output}"
+
+# Step 6: Population matrix (cross-sample)
 rule population_matrix:
     input:
         expand("res/final/{sample}.bed", sample=config['global']['sample-names']),

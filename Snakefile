@@ -22,6 +22,10 @@ include: "rules/delly.smk"
 # Merge, filter, annotate, and generate population matrix
 include: "rules/merge.smk"
 
+# Breakpoint analysis (optional)
+if config['params'].get('breakpoint-analysis', False):
+    include: "rules/breakpoint.smk"
+
 # Visualization
 include: "rules/report.smk"
 
