@@ -24,12 +24,16 @@ digraph FissionCNV {
     merge   [label="Merge calls across tools\n(priority: smoove → delly → cnvkit → cnvpytor → mops)", fillcolor="#d6ebff"];
     duphold [label="Score with duphold\n(DHFC / DHBFC / DHFFC)", fillcolor="#d6ebff"];
     filter  [label="Hard filter\n(toolNum ≥ 2 · duphold > 0 · depth-only ≥ 600 bp)", fillcolor="#d6ebff"];
-    annot   [label="Annotate\n(GS, MS, population frequency)", fillcolor="#d6ebff"];
+    annot   [label="Annotate\n(GS, MS)", fillcolor="#d6ebff"];
 
     // ---- Outputs ----
     final   [label="per-sample BED\nres/final/{sample}.bed", fillcolor="#d4f7d4"];
-    popmat  [label="population CN / binary matrix\nres/population/*.tsv", fillcolor="#d4f7d4"];
     plot    [label="genome overview plot\nres/report/{sample}.overview.png", fillcolor="#d4f7d4"];
+
+    // ---- Optional standalone population merge (run manually after the workflow) ----
+    refilt  [label="filterCNV.py  (optional)\nper-sample duphold-metric refilter", fillcolor="#f3e8ff", style="rounded,filled,dashed", color="#8250df"];
+    popm    [label="mergeCNVPopulation.py\ncross-sample merge + pop-freq", fillcolor="#f3e8ff", style="rounded,filled,dashed", color="#8250df"];
+    popmat  [label="population CN / binary matrix\nres/population/*.tsv", fillcolor="#d4f7d4"];
 
     // ---- Edges ----
     fq    -> prep;
@@ -43,8 +47,11 @@ digraph FissionCNV {
     ref   -> duphold;
     merge -> duphold -> filter -> annot -> final;
     anno  -> annot;
-    final -> popmat;
     final -> plot;
+    final -> refilt [style=dashed, color="#8250df", xlabel="optional refilter"];
+    final -> popm   [style=dashed, color="#8250df", xlabel="or merge directly"];
+    refilt -> popm  [style=dashed, color="#8250df"];
+    popm  -> popmat;
 
     // ---- Legend ----
     subgraph cluster_legend {
@@ -58,6 +65,7 @@ digraph FissionCNV {
         l_step  [label="processing step",   fillcolor="#d6ebff"];
         l_call  [label="CNV calling",       fillcolor="#fde8c4"];
         l_out   [label="output",            fillcolor="#d4f7d4"];
-        l_in -> l_step -> l_call -> l_out [style=invis];
+        l_opt   [label="optional standalone", fillcolor="#f3e8ff", style="rounded,filled,dashed", color="#8250df"];
+        l_in -> l_step -> l_call -> l_out -> l_opt [style=invis];
     }
 }

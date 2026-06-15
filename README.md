@@ -150,22 +150,35 @@ flowchart TD
 
     FINAL --> PLOT
 
-    %% Cross-sample population merge is a standalone post-workflow step:
-    %%   filterCNV.py (optional refilter) -> mergeCNVPopulation.py -> cn/binary matrix
+    %% ====== Optional standalone population merge (run after the workflow) ======
+    subgraph POP["Population merge (optional · standalone, not run by the workflow)"]
+        REFILT["filterCNV.py (optional)<br/>per-sample duphold-metric refilter<br/>--preset tier1 / --dup-* / --del-*"]
+        POPM["mergeCNVPopulation.py<br/>cross-sample reciprocal-overlap merge<br/>+ population-freq annotation"]
+        CNMAT["res/population/cn_matrix.tsv"]
+        BNMAT["res/population/binary_matrix.tsv"]
+        REFILT -.-> POPM
+        POPM --> CNMAT
+        POPM --> BNMAT
+    end
+
+    FINAL -.optional refilter.-> REFILT
+    FINAL -.or merge directly.-> POPM
 
     %% ====== Styling ======
     classDef cohort fill:#fde8c4,stroke:#b97a00,color:#000;
     classDef persample fill:#d6ebff,stroke:#1f6feb,color:#000;
     classDef io fill:#eeeeee,stroke:#444,color:#000;
     classDef final fill:#d4f7d4,stroke:#1a7f37,color:#000;
+    classDef optional fill:#f3e8ff,stroke:#8250df,color:#000,stroke-dasharray:5 3;
 
     class FQ,BAM0,REF,ANNO io;
     class FAIDX,BWAIDX,MULTIQC,CK_ACC,CK_TGT,CK_ATG,CK_REF,MO_R,DL_MERGE,DL_GMERGE,DL_FILT cohort;
     class FASTP,BWAMEM,MKDUP,BIDX,BAM,CK_TCOV,CK_ACOV,CK_FIX,CK_SEG,CK_SMT,CK_CALL,CK_BED,CP_RUN,CP_BED,MO_BED,SM_CALL,SM_EX,SM_BED,DL_CALL,DL_GENO,DL_UNC,DL_EX,DL_BED,MERGE,BED2VCF,DUPHOLD,DUPEX,HF,ANNOT,PLOT persample;
-    class FINAL final;
+    class FINAL,CNMAT,BNMAT final;
+    class REFILT,POPM optional;
 ```
 
-Legend: gray = inputs · orange = cohort-level (runs once across all samples) · blue = per-sample parallel · green = final outputs.
+Legend: gray = inputs · orange = cohort-level (runs once across all samples) · blue = per-sample parallel · green = final outputs · purple dashed = optional standalone step (run manually after the workflow).
 
 ## Usage
 
