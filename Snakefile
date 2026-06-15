@@ -19,7 +19,8 @@ include: "rules/cnmops.smk"
 include: "rules/smoove.smk"
 include: "rules/delly.smk"
 
-# Merge, filter, annotate, and generate population matrix
+# Merge tool calls, filter, and annotate (cross-sample population merge is a
+# standalone step: scripts/filterCNV.py + scripts/mergeCNVPopulation.py)
 include: "rules/merge.smk"
 
 # Breakpoint analysis (optional)
@@ -32,6 +33,4 @@ include: "rules/report.smk"
 rule all:
     input:
         expand("res/final/{sample}.bed", sample=config['global']['sample-names']),
-        "res/population/cn_matrix.tsv",
-        "res/population/binary_matrix.tsv",
         expand("res/report/{sample}.overview.png", sample=config['global']['sample-names']),

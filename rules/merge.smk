@@ -61,19 +61,8 @@ if not config['params'].get('breakpoint-analysis', False):
         shell:
             "cp {input} {output}"
 
-# Step 6: Population matrix (cross-sample)
-rule population_matrix:
-    input:
-        expand("res/final/{sample}.bed", sample=config['global']['sample-names']),
-    output:
-        cn_matrix = "res/population/cn_matrix.tsv",
-        binary_matrix = "res/population/binary_matrix.tsv",
-    params:
-        absPath = config['params']['absPath'],
-        min_overlap = config['params']['merge']['min-reciprocal-overlap'],
-        max_overlap = config['params']['merge']['max-overlap'],
-        length_ratio = config['params']['merge']['length-ratio-limit'],
-        freq_threshold = config['params']['population-freq-threshold'],
-        sample_names = config['global']['sample-names'],
-    script:
-        "../scripts/populationMatrix.py"
+# Cross-sample merge (population CN / binary matrices) is intentionally NOT part
+# of the workflow: different species often need different per-sample refilter and
+# overlap parameters before merging. Run it standalone after the workflow finishes:
+#   python scripts/filterCNV.py        --in-dir res/filtered --out-dir res/refilt ...
+#   python scripts/mergeCNVPopulation.py --in-dir res/refilt   --out-dir res/population ...
