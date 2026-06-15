@@ -12,6 +12,11 @@ res/
 logs/
 benchmarks/
 
+# Per-run inputs (point at real sequencing data, one table per species).
+# config.yaml and samples.tsv stay tracked as templates but their local
+# run-state edits are hidden via `git update-index --skip-worktree`.
+samples.*.tsv
+
 # Loose run artifacts
 snakemake_run.log
 nohup.out
