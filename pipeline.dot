@@ -48,8 +48,15 @@ digraph FissionCNV {
     merge -> duphold -> filter -> annot -> final;
     anno  -> annot;
     final -> plot;
-    final -> refilt [style=dashed, color="#8250df", xlabel="optional refilter"];
-    final -> popm   [style=dashed, color="#8250df", xlabel="or merge directly"];
+    // dashed-edge labels carried by plaintext nodes pinned to one rank so both
+    // sit on the same horizontal line (ortho splines ignore edge labels)
+    lblA [label="optional refilter", shape=plaintext, style="", fillcolor="none", fontsize=9, fontcolor="#8250df"];
+    lblB [label="or merge directly", shape=plaintext, style="", fillcolor="none", fontsize=9, fontcolor="#8250df"];
+    { rank=same; lblA; lblB; }
+    final -> lblB [style=dashed, color="#8250df", dir=none];
+    lblB -> popm  [style=dashed, color="#8250df"];
+    final -> lblA [style=dashed, color="#8250df", dir=none];
+    lblA -> refilt [style=dashed, color="#8250df"];
     refilt -> popm  [style=dashed, color="#8250df"];
     popm  -> popmat;
 
